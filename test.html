@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickPitch Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background: #c41e3a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #a01020;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>QuickPitch Script Debug Test</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Check if scripts loaded</h2>
+        <button onclick="checkScriptsLoaded()">Check Scripts</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Test selectCallType function</h2>
+        <button onclick="testSelectCallType()">Test Ring Fex</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Check window.callScripts</h2>
+        <button onclick="checkCallScripts()">Check callScripts Object</button>
+    </div>
+
+    <div id="output"></div>
+    <div id="scriptContent"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            output.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+            console.log(message);
+        }
+
+        function checkScriptsLoaded() {
+            log('=== Checking if scripts loaded ===');
+
+            if (typeof window.callScripts !== 'undefined') {
+                log('✓ window.callScripts is defined', 'success');
+                log(`   Found ${Object.keys(window.callScripts).length} scripts`);
+            } else {
+                log('✗ window.callScripts is NOT defined', 'error');
+            }
+
+            if (typeof window.selectCallType !== 'undefined') {
+                log('✓ window.selectCallType function exists', 'success');
+            } else {
+                log('✗ window.selectCallType function missing', 'error');
+            }
+
+            if (typeof window.renderScript !== 'undefined') {
+                log('✓ window.renderScript function exists', 'success');
+            } else {
+                log('✗ window.renderScript function missing', 'error');
+            }
+        }
+
+        function testSelectCallType() {
+            log('=== Testing selectCallType function ===');
+
+            if (typeof window.selectCallType === 'undefined') {
+                log('✗ selectCallType function not found', 'error');
+                return;
+            }
+
+            const testButton = document.createElement('button');
+            testButton.textContent = 'Test Button';
+
+            try {
+                window.selectCallType('ring-fex', testButton);
+                log('✓ selectCallType executed without error', 'success');
+
+                const content = document.getElementById('scriptContent');
+                if (content && content.innerHTML.includes('Ring Fex')) {
+                    log('✓ Script content rendered successfully', 'success');
+                } else if (content && content.innerHTML.length > 0) {
+                    log('✓ Some content rendered', 'success');
+                    log(`   Content length: ${content.innerHTML.length} characters`);
+                } else {
+                    log('✗ No content rendered in scriptContent', 'error');
+                }
+            } catch (e) {
+                log(`✗ Error calling selectCallType: ${e.message}`, 'error');
+                console.error(e);
+            }
+        }
+
+        function checkCallScripts() {
+            log('=== Checking callScripts object ===');
+
+            if (typeof window.callScripts === 'undefined') {
+                log('✗ window.callScripts is undefined', 'error');
+                return;
+            }
+
+            const scripts = Object.keys(window.callScripts);
+            log(`✓ Found ${scripts.length} script types:`, 'success');
+            scripts.forEach(script => {
+                log(`   - ${script}`);
+                if (window.callScripts[script].script) {
+                    log(`     Script length: ${window.callScripts[script].script.length} chars`);
+                }
+            });
+        }
+
+        // Auto-run on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            log('Page loaded, running initial checks...');
+            setTimeout(() => {
+                checkScriptsLoaded();
+            }, 500);
+        });
+    </script>
+
+    <script src="quickpitch-scripts.js"></script>
+</body>
+</html>

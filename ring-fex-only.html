@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ring Fex Final Expense Script - Family First Life</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+                min-height: 100vh;
+                padding: 20px;
+            }
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+                background: #1e1e1e;
+                border-radius: 20px;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+                overflow: hidden;
+            }
+            .header {
+                background: linear-gradient(135deg, #c41e3a 0%, #8b1529 100%);
+                color: #f0e9dc;
+                padding: 40px;
+                text-align: center;
+            }
+            .header h1 {
+                font-size: 3em;
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+            .header p {
+                font-size: 1.2em;
+                opacity: 0.95;
+            }
+            .content {
+                padding: 40px;
+            }
+            .form-section {
+                background: linear-gradient(135deg, #252525 0%, #2a2a2a 100%);
+                padding: 30px;
+                border-radius: 15px;
+                margin-bottom: 30px;
+                border-left: 5px solid #c41e3a;
+            }
+            .form-section h2 {
+                margin-bottom: 20px;
+                color: #e8dcc8;
+            }
+            .form-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            .form-group {
+                display: flex;
+                flex-direction: column;
+            }
+            .form-group label {
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #c4b5a0;
+            }
+            .form-group input {
+                padding: 15px;
+                border: 2px solid #444;
+                border-radius: 10px;
+                font-size: 16px;
+                width: 100%;
+                background: #333;
+                color: #e8dcc8;
+                transition: border-color 0.3s ease;
+            }
+            .form-group input::placeholder {
+                color: #666;
+            }
+            .form-group input:focus {
+                outline: none;
+                border-color: #c41e3a;
+                box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.3);
+            }
+            select {
+                padding: 10px 15px;
+                border: 2px solid #444;
+                border-radius: 8px;
+                font-size: 14px;
+                cursor: pointer;
+                min-width: 200px;
+                background: #333;
+                color: #e8dcc8;
+                transition: border-color 0.3s ease;
+            }
+            select:focus {
+                outline: none;
+                border-color: #c41e3a;
+                box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.3);
+            }
+            select option {
+                background: #333;
+                color: #e8dcc8;
+            }
+            button {
+                transition: all 0.3s ease;
+            }
+            .pitch-section {
+                background: linear-gradient(135deg, #252525 0%, #2a2a2a 100%);
+                border-radius: 20px;
+                overflow: hidden;
+            }
+            .pitch-header {
+                background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+                color: #e8dcc8;
+                padding: 25px 30px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 15px;
+                border-bottom: 2px solid #c41e3a;
+            }
+            .pitch-header h2 {
+                font-size: 1.5em;
+            }
+            .button-group {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .btn {
+                padding: 12px 20px;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            }
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+            .btn-primary {
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                color: #f0e9dc;
+            }
+            .btn-secondary {
+                background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+                color: #f0e9dc;
+            }
+            #scriptContent {
+                padding: 40px;
+                min-height: 300px;
+                background: #1e1e1e;
+            }
+            .script-content {
+                background: #2a2a2a;
+                padding: 35px;
+                border-radius: 15px;
+                border-left: 6px solid #c41e3a;
+            }
+            .script-content h3 {
+                color: #e8dcc8;
+                margin-bottom: 25px;
+                font-size: 1.4em;
+            }
+            .script-text {
+                line-height: 1.9;
+                color: #d4c5b0;
+                font-size: 1.05em;
+                word-wrap: break-word;
+            }
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                padding: 20px;
+            }
+            .modal.show {
+                display: flex;
+            }
+            .modal-content {
+                background: #2a2a2a;
+                padding: 40px;
+                border-radius: 20px;
+                max-width: 900px;
+                width: 100%;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+                border: 2px solid #444;
+            }
+            .modal-content h3 {
+                margin-bottom: 25px;
+                color: #e8dcc8;
+                font-size: 1.8em;
+            }
+            .close-btn {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: none;
+                border: none;
+                font-size: 30px;
+                cursor: pointer;
+                color: #999;
+            }
+            .close-btn:hover {
+                color: #c41e3a;
+            }
+            .objection-item,
+            .tip-item,
+            .carrier-item,
+            .compliance-item {
+                background: #333;
+                padding: 25px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                border-left: 5px solid #c41e3a;
+                color: #d4c5b0;
+            }
+            .objection-question {
+                font-weight: 700;
+                color: #c41e3a;
+                margin-bottom: 12px;
+                font-size: 1.1em;
+            }
+            .carrier-name {
+                font-weight: 700;
+                color: #2196f3;
+                margin-bottom: 8px;
+                font-size: 1.2em;
+            }
+            .compliance-header {
+                font-weight: 700;
+                color: #d32f2f;
+                margin-bottom: 12px;
+                font-size: 1.1em;
+            }
+            .toast {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: #28a745;
+                color: #f0e9dc;
+                padding: 18px 28px;
+                border-radius: 12px;
+                transform: translateX(500px);
+                transition: transform 0.4s ease;
+                z-index: 1001;
+                font-weight: 600;
+            }
+            .toast.show {
+                transform: translateX(0);
+            }
+            .empty-state {
+                text-align: center;
+                color: #a89a82;
+                padding: 50px;
+            }
+            .empty-state-icon {
+                font-size: 4em;
+                margin-bottom: 25px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📞 Ring Fex Final Expense</h1>
+                <p>
+                    Professional Script System - Family First Life
+                </p>
+            </div>
+            <div class="content">
+                <div class="form-section">
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            margin-bottom: 20px;
+                            gap: 10px;
+                            flex-wrap: wrap;
+                        "
+                    >
+                        <h2 style="margin: 0">👤 Client Information</h2>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap">
+                            <select
+                                id="recentClients"
+                                onchange="loadRecentClient()"
+                                style="
+                                    padding: 10px 15px;
+                                    border: 2px solid #444;
+                                    border-radius: 8px;
+                                    font-size: 14px;
+                                    cursor: pointer;
+                                    min-width: 200px;
+                                    background: #333;
+                                    color: #e8dcc8;
+                                "
+                            >
+                                <option value="">📋 Recent Clients...</option>
+                            </select>
+                            <button
+                                onclick="clearAllData()"
+                                style="
+                                    padding: 10px 20px;
+                                    background: #dc3545;
+                                    color: #f0e9dc;
+                                    border: none;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: 600;
+                                    transition: all 0.3s ease;
+                                "
+                            >
+                                🗑️ Clear All
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="clientName">Client Name</label>
+                            <input
+                                type="text"
+                                id="clientName"
+                                placeholder="John Smith"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="clientAge">Client Age</label>
+                            <input
+                                type="number"
+                                id="clientAge"
+                                placeholder="65"
+                                min="18"
+                                max="100"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="coverage">Coverage Amount</label>
+                            <input
+                                type="text"
+                                id="coverage"
+                                placeholder="$25,000"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="premium">Current Premium</label>
+                            <input type="text" id="premium" placeholder="$85" />
+                        </div>
+                        <div class="form-group">
+                            <label for="carrier">Current Carrier</label>
+                            <input
+                                type="text"
+                                id="carrier"
+                                placeholder="Americo"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="agentName">Your Name</label>
+                            <input
+                                type="text"
+                                id="agentName"
+                                placeholder="Michael"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="newPremium">New/Lower Premium</label>
+                            <input
+                                type="text"
+                                id="newPremium"
+                                placeholder="$60"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="additionalPremium"
+                                >Additional Coverage Premium</label
+                            >
+                            <input
+                                type="text"
+                                id="additionalPremium"
+                                placeholder="$20"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="cashAmount">Cash Out Amount</label>
+                            <input
+                                type="text"
+                                id="cashAmount"
+                                placeholder="$1,200"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="savings">Monthly Savings</label>
+                            <input type="text" id="savings" placeholder="$25" />
+                        </div>
+                        <div class="form-group">
+                            <label for="beneficiary">Beneficiary Name</label>
+                            <input
+                                type="text"
+                                id="beneficiary"
+                                placeholder="Sarah Johnson"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="agencyName">Agency Name</label>
+                            <input
+                                type="text"
+                                id="agencyName"
+                                placeholder="Family First Life"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pitch-section">
+                    <div class="pitch-header">
+                        <h2>📋 Your Script</h2>
+                        <div class="button-group">
+                            <button
+                                class="btn btn-secondary"
+                                onclick="showCarriers()"
+                            >
+                                📞 Carriers
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                onclick="showObjections()"
+                            >
+                                💬 Objections
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                onclick="showCompliance()"
+                            >
+                                ⚖️ Compliance
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                onclick="showTips()"
+                            >
+                                💡 Tips
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                onclick="printScript()"
+                            >
+                                🖨️ Print
+                            </button>
+                            <button
+                                class="btn btn-secondary"
+                                onclick="saveCallToHistory()"
+                            >
+                                💾 Save Call
+                            </button>
+                            <button
+                                class="btn btn-primary"
+                                onclick="copyScript()"
+                            >
+                                📋 Copy Script
+                            </button>
+                        </div>
+                    </div>
+                    <div id="scriptContent">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <div>
+                                Loading Ring Fex script...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals -->
+        <div id="carriersModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeModal('carriersModal')">
+                    &times;
+                </button>
+                <h3>📞 Carrier Information & Preferences</h3>
+                <div id="carriersList"></div>
+            </div>
+        </div>
+
+        <div id="objectionModal" class="modal">
+            <div class="modal-content">
+                <button
+                    class="close-btn"
+                    onclick="closeModal('objectionModal')"
+                >
+                    &times;
+                </button>
+                <h3>💬 Common Objections & Responses</h3>
+                <div id="objectionList"></div>
+            </div>
+        </div>
+
+        <div id="complianceModal" class="modal">
+            <div class="modal-content">
+                <button
+                    class="close-btn"
+                    onclick="closeModal('complianceModal')"
+                >
+                    &times;
+                </button>
+                <h3>⚖️ Critical Compliance Rules</h3>
+                <div id="complianceList"></div>
+            </div>
+        </div>
+
+        <div id="tipsModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeModal('tipsModal')">
+                    &times;
+                </button>
+                <h3>💡 Pro Tips & Success Strategies</h3>
+                <div id="tipsList"></div>
+            </div>
+        </div>
+
+        <div id="copiedToast" class="toast">✅ Script copied to clipboard!</div>
+
+        <script src="quickpitch-scripts.js?v=20250904-ringfex"></script>
+        <script>
+            // Auto-load Ring Fex script on page load
+            document.addEventListener("DOMContentLoaded", function () {
+                console.log("🎯 Ring Fex Only - Auto-loading script...");
+
+                // Wait a moment for the main script to fully initialize
+                setTimeout(function() {
+                    if (window.selectCallType && window.callScripts && window.callScripts['ring-fex']) {
+                        // Create a dummy button element for the selectCallType function
+                        const dummyButton = document.createElement('button');
+                        dummyButton.classList.add('active');
+                        window.selectCallType('ring-fex', dummyButton);
+                        console.log("✅ Ring Fex script auto-loaded!");
+                    } else {
+                        console.error("❌ Failed to auto-load Ring Fex script");
+                    }
+                }, 500);
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickPitch Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #c41e3a;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #c41e3a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #a01729;
+        }
+        .call-type-btn {
+            display: inline-block;
+            margin: 5px;
+        }
+        #scriptContent {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            min-height: 200px;
+            margin-top: 10px;
+        }
+        code {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>🔧 QuickPitch Debug Test Page</h1>
+
+    <div class="debug-section">
+        <h2>1️⃣ Script Loading Status</h2>
+        <div id="loadStatus"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>2️⃣ Global Functions Check</h2>
+        <div id="functionsStatus"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>3️⃣ Call Scripts Data Check</h2>
+        <div id="scriptsStatus"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>4️⃣ Test Call Type Selection</h2>
+        <p>Click these buttons to test if scripts load:</p>
+        <div></div>
+            <button class="call-type-btn" onclick="selectCallType('ring-fex', this)">
+                📞 Ring Fex
+            </button>
+            <button class="call-type-btn" onclick="selectCallType('quote-shopping', this)">
+                🔥 Quote Shopping
+            </button>
+            <button class="call-type-btn" onclick="selectCallType('additional-coverage', this)">
+                💰 Additional Coverage
+            </button>
+        </div>
+        <div id="scriptContent"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>5️⃣ Console Output</h2>
+        <pre id="consoleOutput"></pre>
+    </div>
+
+    <!-- Minimal form fields for context -->
+    <div style="display: none;">
+        <input type="text" id="clientName" value="John Smith">
+        <input type="text" id="clientAge" value="65">
+        <input type="text" id="coverage" value="$25,000">
+        <input type="text" id="premium" value="$85">
+        <input type="text" id="carrier" value="Americo">
+        <input type="text" id="agentName" value="Michael">
+        <input type="text" id="newPremium" value="$60">
+        <input type="text" id="additionalPremium" value="$20">
+        <input type="text" id="cashAmount" value="$1,200">
+        <input type="text" id="savings" value="$25">
+        <input type="text" id="beneficiary" value="Sarah">
+        <input type="text" id="agencyName" value="Family First Life">
+    </div>
+
+    <script>
+        // Console capture
+        const consoleLog = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+
+        console.log = function(...args) {
+            consoleLog.push(['LOG', ...args]);
+            originalLog.apply(console, args);
+            updateConsoleOutput();
+        };
+
+        console.error = function(...args) {
+            consoleLog.push(['ERROR', ...args]);
+            originalError.apply(console, args);
+            updateConsoleOutput();
+        };
+
+        function updateConsoleOutput() {
+            const output = document.getElementById('consoleOutput');
+            output.textContent = consoleLog.map(log => {
+                const type = log[0];
+                const message = log.slice(1).join(' ');
+                return `[${type}] ${message}`;
+            }).join('\n');
+        }
+
+        function checkStatus() {
+            const loadStatus = document.getElementById('loadStatus');
+            const functionsStatus = document.getElementById('functionsStatus');
+            const scriptsStatus = document.getElementById('scriptsStatus');
+
+            // Check if script loaded
+            let html = '';
+            if (typeof window.callScripts !== 'undefined') {
+                html += '<div class="status success">✅ quickpitch-scripts.js loaded successfully</div>';
+            } else {
+                html += '<div class="status error">❌ quickpitch-scripts.js failed to load</div>';
+            }
+            loadStatus.innerHTML = html;
+
+            // Check functions
+            html = '';
+            const functions = ['selectCallType', 'renderScript', 'copyScript', 'showCarriers', 'showObjections', 'showCompliance', 'showTips'];
+            functions.forEach(fn => {
+                if (typeof window[fn] === 'function') {
+                    html += `<div class="status success">✅ <code>${fn}()</code> is available</div>`;
+                } else {
+                    html += `<div class="status error">❌ <code>${fn}()</code> is NOT available</div>`;
+                }
+            });
+            functionsStatus.innerHTML = html;
+
+            // Check call scripts
+            html = '';
+            if (typeof window.callScripts !== 'undefined') {
+                const scriptTypes = Object.keys(window.callScripts);
+                html += `<div class="status success">✅ Found ${scriptTypes.length} call script types:</div>`;
+                html += '<ul>';
+                scriptTypes.forEach(type => {
+                    const hasScript = window.callScripts[type].script ? '✅' : '❌';
+                    const hasObjections = window.callScripts[type].objections ? '✅' : '❌';
+                    const hasTips = window.callScripts[type].tips ? '✅' : '❌';
+                    html += `<li><strong>${type}</strong>: Script ${hasScript} | Objections ${hasObjections} | Tips ${hasTips}</li>`;
+                });
+                html += '</ul>';
+            } else {
+                html += '<div class="status error">❌ window.callScripts is NOT defined</div>';
+            }
+            scriptsStatus.innerHTML = html;
+
+            console.log('Debug check completed at', new Date().toLocaleTimeString());
+        }
+
+        // Run check after page loads
+        window.addEventListener('load', function() {
+            setTimeout(checkStatus, 500);
+        });
+    </script>
+
+    <!-- Load the actual scripts file -->
+    <script src="quickpitch-scripts.js"></script>
+</body>
+</html>

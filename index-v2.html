@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickPitch 2.0 - Family First Life</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15); 
+            overflow: hidden; 
+        }
+        .header { 
+            background: linear-gradient(135deg, #c41e3a 0%, #b71c1c 100%); 
+            color: white; 
+            padding: 40px; 
+            text-align: center; 
+            position: relative;
+        }
+        .version-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .header h1 { 
+            font-size: 3em; 
+            margin-bottom: 10px; 
+            font-weight: 700; 
+        }
+        .header p { 
+            font-size: 1.2em; 
+            opacity: 0.95; 
+        }
+        .content { 
+            padding: 40px; 
+        }
+        
+        /* NEW: Quick Access Bar */
+        .quick-access {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            border-left: 5px solid #28a745;
+        }
+        .quick-access label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .quick-access select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            min-width: 250px;
+            background: white;
+            cursor: pointer;
+        }
+        .quick-access select:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+        .quick-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .quick-btn:hover {
+            border-color: #c41e3a;
+            transform: translateY(-2px);
+        }
+        .auto-save-indicator {
+            margin-left: auto;
+            color: #28a745;
+            font-weight: 600;
+            display: none;
+        }
+        .auto-save-indicator.show {
+            display: block;
+        }
+        
+        .form-section { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            padding: 30px; 
+            border-radius: 15px; 
+            margin-bottom: 30px; 
+            border-left: 5px solid #c41e3a; 
+        }
+        .form-section h2 { 
+            margin-bottom: 20px; 
+            color: #2c3e50; 
+        }
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 25px; 
+        }
+        
+        /* Mobile optimization */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+            .header p {
+                font-size: 1em;
+            }
+            .content {
+                padding: 20px;
+            }
+            .quick-access {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .quick-access select {
+                min-width: 100%;
+            }
+        }
+        
+        .form-group { 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .form-group label { 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #495057; 
+        }
+        .form-group input { 
+            padding: 15px; 
+            border: 2px solid #ddd; 
+            border-radius: 10px; 
+            font-size: 16px; 
+            width: 100%; 
+            transition: border-color 0.3s ease; 
+        }
+        .form-group input:focus { 
+            outline: none; 
+            border-color: #c41e3a; 
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1); 
+        }
+        
+        .call-type-buttons { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 15px; 
+            margin-bottom: 30px; 
+        }
+        
+        /* Mobile: Larger buttons */
+        @media (max-width: 768px) {
+            .call-type-buttons {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .call-type-btn {
+                padding: 20px !important;
+                font-size: 1.1em !important;
+            }
+        }
+        
+        .call-type-btn { 
+            padding: 15px 20px; 
+            border: 3px solid #e9ecef; 
+            background: white; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 1em; 
+            transition: all 0.3s ease; 
+            text-align: center; 
+        }
+        .call-type-btn:hover { 
+            border-color: #c41e3a; 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+        .call-type-btn.active { 
+            background: linear-gradient(135deg, #c41e3a 0%, #b71c1c 100%); 
+            color: white; 
+            border-color: #c41e3a; 
+            box-shadow: 0 5px 15px rgba(196, 30, 58, 0.3);
+        }
+        
+        .pitch-section { 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); 
+            border-radius: 20px; 
+            overflow: hidden; 
+        }
+        .pitch-header { 
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); 
+            color: white; 
+            padding: 25px 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+        }
+        .pitch-header h2 { 
+            font-size: 1.5em; 
+        }
+        .button-group { 
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+        }
+        
+        /* Mobile: Stack buttons */
+        @media (max-width: 768px) {
+            .pitch-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        .btn { 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s ease; 
+        }
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+            color: white; 
+        }
+        .btn-secondary { 
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%); 
+            color: white; 
+        }
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+        }
+        
+        #pitchContent { 
+            padding: 40px; 
+            min-height: 300px; 
+        }
+        
+        /* NEW: Quick Notes Section */
+        .quick-notes-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #ffc107;
+        }
+        .quick-notes-section h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .quick-notes-section textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffeaa7;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            min-height: 80px;
+            resize: vertical;
+        }
+        .quick-notes-section textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+        }
+        .save-call-btn {
+            margin-top: 10px;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            color: #212529;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .save-call-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+        
+        /* NEW: Timer */
+        .call-timer {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .timer-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+        .timer-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .script-content { 
+            background: white; 
+            padding: 35px; 
+            border-radius: 15px; 
+            border-left: 6px solid #c41e3a; 
+        }
+        .script-content h3 { 
+            color: #2c3e50; 
+            margin-bottom: 25px; 
+            font-size: 1.4em; 
+        }
+        .script-text { 
+            line-height: 1.9; 
+            color: #2c3e50; 
+            font-size: 1.05em; 
+            word-wrap: break-word;
+        }
+        
+        .modal { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.6); 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+            padding: 20px; 
+        }
+        .modal.show { 
+            display: flex; 
+        }
+        .modal-content { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            max-width: 900px; 
+            width: 100%; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            position: relative; 
+        }
+        .modal-content h3 { 
+            margin-bottom: 25px; 
+            color: #2c3e50; 
+            font-size: 1.8em; 
+        }
+        .close-btn { 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            background: none; 
+            border: none; 
+            font-size: 30px; 
+            cursor: pointer; 
+            color: #6c757d; 
+        }
+        .close-btn:hover { 
+            color: #c41e3a; 
+        }
+        
+        /* NEW: History Modal Styles */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .history-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        .history-table td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        .history-table tr:hover {
+            background: #f8f9fa;
+            cursor: pointer;
+        }
+        .load-history-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .load-history-btn:hover {
+            background: #218838;
+        }
+        .delete-history-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+        .delete-history-btn:hover {
+            background: #c82333;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .objection-item, .tip-item, .carrier-item, .compliance-item { 
+            background: #f8f9fa; 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            border-left: 5px solid #c41e3a; 
+        }
+        .objection-question { 
+            font-weight: 700; 
+            color: #c41e3a; 
+            margin-bottom: 12px; 
+            font-size: 1.1em; 
+        }
+        .carrier-name { 
+            font-weight: 700; 
+            color: #2196f3; 
+            margin-bottom: 8px; 
+            font-size: 1.2em; 
+        }
+        .compliance-header { 
+            font-weight: 700; 
+            color: #d32f2f; 
+            margin-bottom: 12px; 
+            font-size: 1.1em; 
+        }
+        
+        .toast { 
+            position: fixed; 
+            bottom: 30px; 
+            right: 30px; 
+            background: #28a745; 
+            color: white; 
+            padding: 18px 28px; 
+            border-radius: 12px; 
+            transform: translateX(500px); 
+            transition: transform 0.4s ease; 
+            z-index: 1001; 
+            font-weight: 600; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .toast.show { 
+            transform: translateX(0); 
+        }
+        
+        .empty-state { 
+            text-align: center; 
+            color: #666; 
+            padding: 50px; 
+        }
+        .empty-state-icon { 
+            font-size: 4em; 
+            margin-bottom: 25px; 
+        }
+        
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .header, .quick-access, .form-section, .call-type-buttons, 
+            .pitch-header, .quick-notes-section, .button-group {
+                display: none !important;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .script-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="version-badge">v2.0 Pro</div>
+            <h1>Family First Life</h1>
+            <p>QuickPitch Pro - Complete Training System</p>
+        </div>
+        <div class="content">
+            <!-- NEW: Quick Access Bar -->
+            <div class="quick-access">
+                <label for="recentClients">📋 Recent Clients:</label>
+                <select id="recentClients" onchange="loadRecentClient(this.value)">
+                    <option value="">-- Select Recent Client --</option>
+                </select>
+                <button class="quick-btn" onclick="clearAllFields()">🗑️ Clear All</button>
+                <button class="quick-btn" onclick="showHistory()">📊 View History</button>
+                <button class="quick-btn" onclick="exportHistory()">💾 Export CSV</button>
+                <span class="auto-save-indicator" id="autoSaveIndicator">✓ Auto-saved</span>
+            </div>
+            
+            <div class="form-section">
+                <h2>👤 Client Information</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="clientName">Client Name</label>
+                        <input type="text" id="clientName" placeholder="John Smith">
+                    </div>
+                    <div class="form-group">
+                        <label for="clientAge">Client Age</label>
+                        <input type="number" id="clientAge" placeholder="65" min="18" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="coverage">Coverage Amount</label>
+                        <input type="text" id="coverage" placeholder="$25,000">
+                    </div>
+                    <div class="form-group">
+                        <label for="premium">Current Premium</label>
+                        <input type="text" id="premium" placeholder="$85">
+                    </div>
+                    <div class="form-group">
+                        <label for="carrier">Current Carrier</label>
+                        <input type="text" id="carrier" placeholder="Americo">
+                    </div>
+                    <div class="form-group">
+                        <label for="agentName">Your Name</label>
+                        <input type="text" id="agentName" placeholder="Michael">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPremium">New/Lower Premium</label>
+                        <input type="text" id="newPremium" placeholder="$60">
+                    </div>
+                    <div class="form-group">
+                        <label for="additionalPremium">Additional Coverage Premium</label>
+                        <input type="text" id="additionalPremium" placeholder="$20">
+                    </div>
+                    <div class="form-group">
+                        <label for="cashAmount">Cash Out Amount</label>
+                        <input type="text" id="cashAmount" placeholder="$1,200">
+                    </div>
+                    <div class="form-group">
+                        <label for="savings">Monthly Savings</label>
+                        <input type="text" id="savings" placeholder="$25">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="call-type-buttons">
+                <button class="call-type-btn" onclick="selectCallType('quote-shopping', this)">
+                    🔥 Quote Shopper/New Lead
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('additional-coverage', this)">
+                    💰 Additional Coverage
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('standard-preferred', this)">
+                    ⭐ Standard vs Preferred
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('term-permanent', this)">
+                    🔄 Term to Permanent
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('cancellation', this)">
+                    ⚠️ Cancellation Prevention
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('death-claim', this)">
+                    😢 Death Claim
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('loan-cash', this)">
+                    💵 Loan/Cash Surrender
+                </button>
+                <button class="call-type-btn" onclick="selectCallType('non-insurance', this)">
+                    📋 Non-Insurance Service
+                </button>
+            </div>
+            
+            <div class="pitch-section">
+                <div class="pitch-header">
+                    <h2>📋 Your Script</h2>
+                    <div class="call-timer">
+                        <span id="timerDisplay">00:00</span>
+                        <button class="timer-btn" id="timerBtn" onclick="toggleTimer()">Start</button>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" onclick="showCarriers()">📞 Carriers</button>
+                        <button class="btn btn-secondary" onclick="showObjections()">💬 Objections</button>
+                        <button class="btn btn-secondary" onclick="showCompliance()">⚖️ Compliance</button>
+                        <button class="btn btn-secondary" onclick="showTips()">💡 Tips</button>
+                        <button class="btn btn-info" onclick="printScript()">🖨️ Print</button>
+                        <button class="btn btn-primary" onclick="copyScript()">📋 Copy Script</button>
+                    </div>
+                </div>
+                <div id="pitchContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div>Select a call type above to load your professional script</div>
+                    </div>
+                </div>
+                
+                <!-- NEW: Quick Notes Section -->
+                <div class="quick-notes-section">
+                    <h4>📝 Quick Call Notes</h4>
+                    <textarea id="quickNotes" placeholder="Add notes about this call... (auto-saves)"></textarea>
+                    <button class="save-call-btn" onclick="saveCallLog()">💾 Save to Call History</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Existing Modals -->
+    <div id="carriersModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('carriersModal')">&times;</button>
+            <h3>📞 Carrier Information & Preferences</h3>
+            <div id="carriersList"></div>
+        </div>
+    </div>
+
+    <div id="objectionModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('objectionModal')">&times;</button>
+            <h3>💬 Common Objections & Responses</h3>
+            <div id="objectionList"></div>
+        </div>
+    </div>
+
+    <div id="complianceModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('complianceModal')">&times;</button>
+            <h3>⚖️ Critical Compliance Rules</h3>
+            <div id="complianceList"></div>
+        </div>
+    </div>
+
+    <div id="tipsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('tipsModal')">&times;</button>
+            <h3>💡 Pro Tips & Success Strategies</h3>
+            <div id="tipsList"></div>
+        </div>
+    </div>
+
+    <!-- NEW: History Modal -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('historyModal')">&times;</button>
+            <h3>📊 Call History & Statistics</h3>
+            <div class="stats-grid" id="statsGrid"></div>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <div id="copiedToast" class="toast">✅ Script copied to clipboard!</div>
+
+    <script src="quickpitch-scripts-v2.js?v=20251002"></script>
+</body>
+</html>
