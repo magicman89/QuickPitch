@@ -128,6 +128,49 @@ Just to confirm your eligibility for some discounts — do you currently bank wi
 
 At this point you can use the script of your choice. YOU DO NOT HAVE TO USE THE REST OF THIS SCRIPT. Use what fits you; use what you are comfortable with and what works with your carriers and products.
 
+**━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
+**🎯 AGENT QUALIFICATION SCRIPT (ALTERNATIVE APPROACH):**
+**━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
+
+**AGENT:**
+Can you spell your first and last name and verify your date of birth?
+
+**AGENT:**
+"Hey [CLIENT_NAME], what's got you looking into getting this today?"
+
+**⚠️ IF THEY SAY THEY DON'T HAVE LIFE INSURANCE:**
+Wait, so if you died tomorrow, [BENEFICIARY] would have to pay for everything out-of-pocket? Wow, it sounds like we definitely need to get this done today.
+
+**AGENT:**
+"Do you already have coverage now?"
+
+If so, how much coverage, how much are you paying, and how long have you had it?
+
+**AGENT:**
+"Who are we trying to protect today?" (Beneficiary)
+
+**AGENT:**
+"Do you plan on getting cremated or buried, and how much coverage do you think you need?"
+
+**AGENT:**
+"Life insurance is something that you can't just buy—you do have to qualify for it."
+
+**AGENT:**
+"Do you have any major or minor medical conditions, or are you taking any prescription medications?"
+
+**AGENT:**
+Since I am licensed with the state, we do have a national database with all the insurance carriers. I am going to now search to see who has the most discounted prices for the coverage you're looking for.
+
+**AGENT:**
+"It looks like here on my end for [COVERAGE_WITH_DOLLAR] of coverage, the top carriers—like Transamerica, Mutual of Omaha, and Aflac—are around [PREMIUM] to [NEW_PREMIUM]. But I see you actually had an offer from Americo before your last birthday for that same coverage at [LOWER_PREMIUM]. Is there any reason you didn't take that when you had the chance?"
+
+**AGENT:**
+"Gotcha, that makes sense. What I'm going to do is see if underwriting will give us a one-time reinstatement. No promises or guarantees. What's your height and weight?"
+
+**━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
+**📋 STANDARD RING FEX SCRIPT (ORIGINAL APPROACH):**
+**━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━**
+
 **AGENT:**
 OK, everything sounds great and can I get your first name & what's your last name?
 
@@ -653,69 +696,6 @@ Okay, I can't make promises but I'm going to see if I can get this activated. I 
       "Natural transition to sales",
       "Every call = sales opportunity",
       "Document everything",
-    ],
-  },
-
-  "agent-qualification": {
-    script: `**AGENT:**
-Can you spell your first and last name and verify your date of birth?
-
-**AGENT:**
-"Hey [CLIENT_NAME], what's got you looking into getting this today?"
-
-**⚠️ IF NO LIFE INSURANCE:**
-Wait, so if you died tomorrow, [BENEFICIARY] would have to pay for everything out-of-pocket? Wow, it sounds like we definitely need to get this done today.
-
-**AGENT:**
-"Do you already have coverage now?"
-
-If so, how much coverage, how much are you paying, and how long have you had it?
-
-**AGENT:**
-"Who are we trying to protect today?" (Beneficiary)
-
-**AGENT:**
-"Do you plan on getting cremated or buried, and how much coverage do you think you need?"
-
-**AGENT:**
-"Life insurance is something that you can't just buy—you do have to qualify for it."
-
-**AGENT:**
-"Do you have any major or minor medical conditions, or are you taking any prescription medications?"
-
-**AGENT:**
-Since I am licensed with the state, we do have a national database with all the insurance carriers. I am going to now search to see who has the most discounted prices for the coverage you're looking for.
-
-**AGENT:**
-"It looks like here on my end for [COVERAGE_WITH_DOLLAR] of coverage, the top carriers—like Transamerica, Mutual of Omaha, and Aflac—are around [PREMIUM] to [NEW_PREMIUM]. But I see you actually had an offer from Americo before your last birthday for that same coverage at [LOWER_PREMIUM]. Is there any reason you didn't take that when you had the chance?"
-
-**AGENT:**
-"Gotcha, that makes sense. What I'm going to do is see if underwriting will give us a one-time reinstatement. No promises or guarantees. What's your height and weight?"`,
-    objections: [
-      {
-        o: "I need to think about it",
-        r: "I understand. But the offer I'm seeing was from before your last birthday. Once that passes, rates go up. Let me at least get you qualified while I can.",
-      },
-      {
-        o: "I already have coverage",
-        r: "That's great! But I'm seeing an expired offer at a better rate than what you're paying. Let's compare - what are you paying now?",
-      },
-      {
-        o: "I don't need that much coverage",
-        r: "No problem. This shows the coverage you qualified for previously. We can adjust the amount - what feels comfortable for your budget?",
-      },
-      {
-        o: "Why didn't I get this offer before?",
-        r: "Good question. It looks like it was sent but returned as no-response. Someone dropped the ball. I'm trying to reactivate it now while you still qualify.",
-      },
-    ],
-    tips: [
-      "Always verify spelling and DOB for accuracy",
-      "Paint the picture with beneficiary burden",
-      "Use 'qualified before birthday' to create urgency",
-      "Position as reinstatement, not new sale",
-      "Get height/weight to show you're processing",
-      "Emphasize state licensing and database access for credibility",
     ],
   },
 };
